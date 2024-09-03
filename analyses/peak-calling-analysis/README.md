@@ -28,7 +28,11 @@ This folder contains scripts tasked to do peak calling analysis for the project 
 This module aims to answer the following questions regarding:
 - exploration of patterns of different members of a protein complex overall but also looking into patterns of specific members being co-recruited to promoters (or bivalent promoters), enhancers, super enhancers, intergenic regions etc.
  
- 
+### Methods
+
+We used the [computeMatrix](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html) function to calculate scores per genome regions and per peaks of interest (promoters, typical enhancers, super enhancers and other). Generated output files were used for visualization purposes with the [plotHeatmap](https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html#plotheatmap) function. 
+
+
 ## Folder structure 
 
 The structure of this folder is as follows:
