@@ -1,0 +1,217 @@
+---
+title: "Create project metadata for nf-core/RNA-seq Analysis"
+author: "Antonia Chroni <achroni@stjude.org> for SJCRH DNB_BINF_Core"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    df_print: paged
+    code_folding: hide
+    toc_depth: 6
+    highlight: tango
+    number_sections: TRUE
+  pdf_document:
+    toc: TRUE
+    highlight: tango
+    number_sections: TRUE
+    latex_engine: lualatex
+    keep_tex: FALSE
+always_allow_html: TRUE
+urlcolor: blue
+linkcolor: black
+citecolor: blue
+geometry: margin=1in
+header-includes: 
+  - \usepackage{titling}
+  - \usepackage{fancyhdr}
+  - \usepackage{geometry} \geometry{a4paper, total={170mm,357mm},left=20mm,top=20mm,}
+  - \usepackage{float}
+params:
+  root_dir: './'
+  data_dir: './'
+  PROJECT_NAME: './'
+  PI_NAME: './'
+  TASK_ID: './'
+  PROJECT_LEAD_NAME: './'
+  DEPARTMENT: './'
+  LEAD_ANALYSTS: './'
+  GROUP_LEAD: './'
+  CONTACT_EMAIL: './'
+  PIPELINE: './'
+  START_DATE: './'
+  COMPLETION_DATE: './'
+---
+
+```{r logo-file, echo=FALSE}
+attach(params)
+logo_file <- file.path(root_dir, "figures", "img", "DNB-BINF-Core-logo.png") # Insert logo on the top of the html report 
+htmltools::img(src = knitr::image_uri(logo_file), alt = "logo", style = "position:absolute; top:0; left:0; padding:0px; height:120px;")
+detach(params)
+```
+
+\addtolength{\headheight}{2.0cm} 
+\fancypagestyle{plain}{} 
+\thispagestyle{fancy}
+\fancyhead[L]{\includegraphics[height=120px]{`r logo_file`}}
+\renewcommand{\headrulewidth}{0pt}
+
+<style type="text/css">
+:root {--DNB_BINF_Core_color: #00427B;}
+
+h1.title {margin-top: 130px;
+          margin-bottom: 25px;
+          font-size: 36px;}
+
+.nobullet li {list-style-type: none;}
+
+.reporthead {font-size: 20px;}
+
+body { /* Normal */
+  font-size: 16px;
+  font-style: Arial, Helvetica, sans-serif;}
+
+h1 {color: var(--DNB_BINF_Core_color);
+    font-size: 28px;
+    margin-top: 50px;}
+
+h2 {color: var(--DNB_BINF_Core_color);
+    font-size: 20px;}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+  background-color: var(--DNB_BINF_Core_color);}
+</style>
+
+<a href="https://wiki.stjude.org/display/CAB">
+
+</a>
+
+\pagebreak
+
+<div class="reporthead"><br/>
+**PI: `r params$PI_NAME`**  
+**Project: `r params$PROJECT_NAME`**  
+Task: `r params$TASK_ID`  
+Project Lead(s): `r params$PROJECT_LEAD_NAME`  
+Department: `r params$DEPARTMENT`  
+
+<br />  
+
+DNB Bioinformatics Core Analysis Team: 
+<br />  
+
+>**Lead Analyst(s): `r params$LEAD_ANALYSTS`**  
+>Group Lead: `r params$GROUP_LEAD`  
+<br />
+>**Contact E-mail:** `r params$CONTACT_EMAIL`  
+>**DNB Bioinformatics Core Pipeline:** `r params$PIPELINE`  
+
+Date started: `r params$START_DATE`  
+Date completed:  `r params$COMPLETION_DATE`  
+Report generated: `r format(Sys.time(), '%H:%M:%S %Z %m/%d/%Y')` \
+
+Reviewed by: _____________________   Date: ____________ \
+</div>
+\pagebreak
+  
+# Information about this notebook
+
+This notebook creates the metadata for the project. The output file generated here can be used as an input file to run [nf-core/RNA-seq](https://nf-co.re/rnaseq/3.14.0) pipeline.
+
+## What to include 
+
+The required columns for the samplesheet are “sample”, “fastq_1”, “fastq_2”, and “strandedness”. Additional columns are allowed, and we typically use the same sample sheet for downstream analyses. So adding columns for “line”, “group”, and “SJID” will be helpful. Each sample was run across two lanes, so there are two sets of FASTQs for each. These files will just be concatenated by the pipeline so long as the same sample name is provided. All required info can be inferred from the file names. Strandedness for all of our samples is always “reverse”. As an example, here’s what the filename of one sample file: SAMPLE1_C1-CELLLINE1_EXPERA24h_1_S21_L001_R1_001.fastq.gz
+
+# Set up
+```{r load-library, echo=TRUE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  })
+```
+
+# Directories and paths to file Inputs/Outputs
+```{r set-dir-and-file-names, echo=TRUE}
+attach(params)
+analysis_dir <- file.path(root_dir, "analyses", "create-project-metadata") 
+
+results_dir <- file.path(analysis_dir, "results")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)}
+
+```
+
+# Read data files
+
+```{r read-data-files, echo=TRUE}
+# Read list of data files
+files_list <- list()
+files_list <- c(dir(path = data_dir,  pattern = ".fastq.gz", full.names = TRUE, recursive = TRUE))
+files_df <- data.frame(file_path = unlist(files_list))
+
+# Create list of sample names
+sample_name_list <- list()
+sample_name_list <- c(str_split_fixed(files_list, "/", 10)[,10])
+sample_name_df <- data.frame(sample_name_drop = unlist(sample_name_list)) %>%
+  mutate(sample_name_drop = str_replace(sample_name_drop, '_001.fastq.gz', '')) 
+```
+
+# Create df with `project_metadata`
+
+```{r create-project-metadata, echo = TRUE}
+# Create df with files
+df <- cbind(files_df, sample_name_df) %>%
+  
+  # add col `SJID`:
+  mutate(SJID = str_split(sample_name_drop, "_", simplify = T)[, 1],
+         
+         # add col `unique_id`: LTC6_BPK30u72h_1_S21_L002
+         unique_id = str_split(sample_name_drop, "-", simplify = T)[, 2],
+         
+         # add col `fastq`   
+         fastq = case_when(grepl("R1", sample_name_drop) ~ "fastq_1",   
+                           grepl("R2", sample_name_drop) ~ "fastq_2")) %>% 
+  
+  # add col `line`: LTC6
+  separate(unique_id, c('line', 'group', 'drop1', 'drop2', 'drop3')) %>%                        
+  
+  # add col `sample`: LTC6_BPK25_72h_1
+  unite("sample", line:drop1, remove = FALSE) %>%
+  
+  # add col `unique_id`: LTC6_BPK30u72h_1_S21_L002
+  unite("unique_id", line:drop3, remove = FALSE) %>%
+  
+  # group: BPK25
+  mutate(group = str_sub(group, 1, 5)) %>% 
+
+  # add col `strandedness`: Strandedness for all of our samples is always “reverse”. 
+  add_column(strandedness = "reverse") %>%
+  
+  # remove columns not needed
+  select(-c(sample_name_drop, drop1, drop2, drop3)) %>%
+  
+  # add col `fastq_1`: `R1_001.fastq.gz` and col `fastq_2`: `R2_001.fastq.gz`
+  pivot_wider(names_from = "fastq", values_from = "file_path") %>%
+  
+  # remove columns not needed
+  select(-c(unique_id)) 
+  
+# head(df)
+```
+
+# Save output file
+
+```{r echo=TRUE}
+write_tsv(df, file = paste0(results_dir, "/", "project-metadata", ".tsv")) 
+```
+
+```{r echo=FALSE}
+detach(params)
+```
+
+\pagebreak
+
+# Session Info
+
+```{r echo=FALSE}
+sessionInfo()
+```
+
