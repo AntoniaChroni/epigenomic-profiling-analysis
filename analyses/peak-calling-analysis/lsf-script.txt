@@ -1,0 +1,8 @@
+#BSUB -P Project
+#BSUB -J peak-calling-analysis
+#BSUB -oo computeMatrix.out -eo computeMatrix.err
+#BSUB -n 8
+#BSUB -R "rusage[mem=6GB] span[hosts=1]"
+
+
+bash 01-CnR-computeMatrix-cellLine1.sh && 01-CnR-computeMatrix-cellLine2.sh
