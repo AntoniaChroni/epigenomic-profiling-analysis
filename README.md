@@ -38,4 +38,4 @@ Antonia Chroni ([@AntoniaChroni](https://github.com/AntoniaChroni))
 
 ## Contact
 
-For questions, please submit an issue or send an email to Antonia Chroni: antonia.chroni@stjude.org
+For questions, please submit an issue.
