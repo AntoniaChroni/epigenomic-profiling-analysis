@@ -8,7 +8,7 @@ This repository contains the code used to conduct analyses for the manuscript no
 
 1. Clone the repository
 ```
-git clone https://github.com/stjudeDNBBinfCore/epigenomic-profiling-analysis.git
+git clone https://github.com/stjude-dnb-binfcore/epigenomic-profiling-analysis.git
 ```
 
 2. Navigate to an analysis module and run the shell script:
