@@ -6,6 +6,9 @@ To run the script in this module from the command line sequentially, use:
 
 ```
 bsub < lsf-script.txt
+```
+
+```
 bash 02-CnR-plotHeatmap.sh
 ```
 
