@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
 
 #################################################################################
 # Set up directories and paths to root_dir and analysis_dir
-root_dir <- file.path("/research/dept/dnb/core_operations/Bioinformatics/achroni/GitHub/epigenomic-profiling-analysis")
+root_dir <- file.path("./GitHub/epigenomic-profiling-analysis")
 analysis_dir <- file.path(root_dir, "analyses", "create-project-metadata")
 report_dir <- file.path(analysis_dir, "results") 
 #################################################################################
