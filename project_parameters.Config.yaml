@@ -1,5 +1,5 @@
 # the following parameters are the same across the project #
-root_dir: "/research/dept/dnb/core_operations/Bioinformatics/achroni/GitHub/epigenomic-profiling-analysis" # path to main dir of the project
+root_dir: "./GitHub/epigenomic-profiling-analysis" # path to main dir of the project
 data_dir: "./raw" # path to data dir of the project 
 PROJECT_NAME: "epigenomic-profiling-analysis"
 PI_NAME: "NA"
@@ -8,7 +8,7 @@ PROJECT_LEAD_NAME: "NA"
 DEPARTMENT: "Developmental Neurobiology"
 LEAD_ANALYSTS: "Antonia Chroni, PhD"
 GROUP_LEAD: "Cody A. Ramirez, PhD"
-CONTACT_EMAIL: "achroni@stjude.org"
+CONTACT_EMAIL: "NA"
 PIPELINE: "nf-core-RNA-seq-analysis"
 START_DATE: "09-03-2024"
 COMPLETION_DATE: "complete"
