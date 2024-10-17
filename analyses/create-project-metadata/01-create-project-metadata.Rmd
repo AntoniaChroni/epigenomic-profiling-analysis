@@ -1,6 +1,6 @@
 ---
 title: "Create project metadata for nf-core/RNA-seq Analysis"
-author: "Antonia Chroni <achroni@stjude.org> for SJCRH DNB_BINF_Core"
+author: "Antonia Chroni for SJCRH DNB_BINF_Core"
 output:
   html_document:
     toc: TRUE
@@ -115,7 +115,7 @@ Reviewed by: _____________________   Date: ____________ \
   
 # Information about this notebook
 
-This notebook creates the metadata for the project. The output file generated here can be used as an input file to run [nf-core/RNA-seq](https://nf-co.re/rnaseq/3.14.0) pipeline.
+This notebook creates the project metadata. The output file generated here can be used as an input file to run the [nf-core/RNA-seq](https://nf-co.re/rnaseq/3.14.0) pipeline.
 
 ## What to include 
 
